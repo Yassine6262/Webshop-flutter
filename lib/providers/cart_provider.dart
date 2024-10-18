@@ -1,22 +1,26 @@
-// lib/providers/cart_provider.dart
-
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 
 class CartProvider with ChangeNotifier {
-  List<Product> _cartItems = [];
+  final List<CartItem> _items = [];
 
-  List<Product> get cartItems => _cartItems;
+  List<CartItem> get items => _items;
+
+  int get itemCount => _items.length;
 
   void addToCart(Product product) {
-    _cartItems.add(product);
+    _items.add(CartItem(product: product));
     notifyListeners();
   }
 
   void removeFromCart(Product product) {
-    _cartItems.remove(product);
+    _items.removeWhere((item) => item.product == product);
     notifyListeners();
   }
+}
 
-  int get cartItemCount => _cartItems.length;
+class CartItem {
+  final Product product;
+
+  CartItem({required this.product});
 }

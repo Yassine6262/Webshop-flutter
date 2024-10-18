@@ -1,12 +1,10 @@
-// lib/screens/product_manager_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product_provider.dart';
 import '../models/product.dart';
 
 class ProductManagerScreen extends StatelessWidget {
-  const ProductManagerScreen({super.key});
+  const ProductManagerScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,90 +12,40 @@ class ProductManagerScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Product Beheer'),
+        title: const Text('Manage Products'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              _showProductDialog(context, productProvider);
+              // TODO: Implement add product screen
             },
           ),
         ],
       ),
       body: ListView.builder(
         itemCount: productProvider.products.length,
-        itemBuilder: (context, index) {
-          final product = productProvider.products[index];
-          return ListTile(
-            title: Text(product.name),
-            subtitle: Text('€${product.price.toStringAsFixed(2)}'),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    _showProductDialog(context, productProvider, product: product);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    productProvider.deleteProduct(product.id);
-                  },
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _showProductDialog(BuildContext context, ProductProvider productProvider, {Product? product}) {
-    final nameController = TextEditingController(text: product?.name);
-    final priceController = TextEditingController(text: product?.price.toString());
-    
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(product == null ? 'Voeg Product Toe' : 'Bewerk Product'),
-          content: Column(
+        itemBuilder: (ctx, i) => ListTile(
+          title: Text(productProvider.products[i].title),
+          trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Productnaam'),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () {
+                  // TODO: Implement update product screen
+                },
               ),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Prijs'),
-                keyboardType: TextInputType.number,
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  productProvider.deleteProduct(productProvider.products[i].id);
+                },
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                if (product == null) {
-                  productProvider.addProduct(nameController.text, double.parse(priceController.text));
-                } else {
-                  productProvider.updateProduct(product.id, nameController.text, double.parse(priceController.text));
-                }
-                Navigator.of(context).pop();
-              },
-              child: Text(product == null ? 'Toevoegen' : 'Bijwerken'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Annuleren'),
-            ),
-          ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
+  
